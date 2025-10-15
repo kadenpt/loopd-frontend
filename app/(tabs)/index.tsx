@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, Keyboard, FlatList, View } from 'react-native';
 import { ThemedView } from '@/components/themed-view';
 import TopBar from '@/components/top-bar';
 import Post from '@/components/post';
@@ -8,7 +8,8 @@ import placeholderImage from '@/assets/images/icon.png';
 
 interface PostType {
   id: number;
-  author_id: string;
+  author_id: number;
+  author_name: string;
   content: string;
   photo_url: string;
 }
@@ -29,34 +30,43 @@ export default function HomeScreen() {
 
   useEffect(() => {
     fetchPosts();
+    console.log(posts);
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ThemedView style={styles.container}>
-        <TopBar />
-        <HomePageFilter />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.headerContainer}>
+            <TopBar />
+            <HomePageFilter />
+          </View>
+        </TouchableWithoutFeedback>
         {/* <Post 
         author="John Doe" 
         authorImage="https://via.placeholder.com/150" 
         caption="This is a caption" 
         image="https://via.placeholder.com/150"
         likes={10} /> */}
-        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-          {posts.map((post) => {
-            return (
-              <Post 
-              key={post.id}
-              author={String(post.author_id)} 
-              authorImage={placeholderImage} 
-              caption={post.content} 
-              image={post.photo_url || placeholderImage} 
-              likes={10} />
-            )
-          })}
-        </ScrollView>
+        <View style={styles.contentContainer}>
+          <FlatList
+            data={posts}
+            keyExtractor={(item: PostType) => item.id.toString()}
+            renderItem={({ item }) => (
+              <Post
+                author={item.author_name}
+                authorImage={placeholderImage}
+                caption={item.content}
+                image={item.photo_url || placeholderImage}
+                likes={10}
+              />
+            )}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            style={{ flex: 1, width: '100%' }}
+          />
+        </View>
       </ThemedView>
-    </TouchableWithoutFeedback>
   )
 }
 
@@ -64,9 +74,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  contentContainer: {
+    flex: 1,
+    width: '100%',
+  },
+  headerContainer: {
+    width: '100%',
   },
 });

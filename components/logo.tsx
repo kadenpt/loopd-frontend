@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
   },
   logo: {
-    width: 75,
-    height: 75,
+    width: 50,
+    height: 50,
     resizeMode: 'contain',
   },
 });

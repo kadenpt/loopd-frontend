@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     paddingTop: 10,
+    backgroundColor: 'transparent',
   },
   selectedButton: {
     borderRadius: 10,
